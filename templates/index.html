@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Position Lease Checker</h1>
+      <form id="positionLeaseForm">
+        <label for="PetalLengthCm">PetalLengthCm:</label>
+        <input type="text" id="PetalLengthCm" required /><br /><br />
+
+        <label for="PetalWidthCm">PetalWidthCm:</label>
+        <input type="text" id="PetalWidthCm" required /><br /><br />
+
+        <button type="button" onclick="predict()">Check Position Lease</button>
+      </form>
+
+      <div id="result">
+        <span id="predictionResult"></span>
+      </div>
+
+      <script>
+        function predict() {
+          const petalLength = parseFloat(
+            document.getElementById("PetalLengthCm").value
+          );
+          const petalWidth = parseFloat(
+            document.getElementById("PetalWidthCm").value
+          );
+
+          const data = {
+            PetalLengthCm: petalLength,
+            PetalWidthCm: petalWidth,
+          };
+
+          fetch("http://127.0.0.1:8080/predict", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById(
+                "predictionResult"
+              ).innerText = `Prediction: ${data.prediction}`;
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              document.getElementById("predictionResult").innerText =
+                "Error predicting the species.";
+            });
+        }
+      </script>
+    </div>
+  </body>
+</html>
