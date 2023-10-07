@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, jsonify
 from pydantic import BaseModel
+from flask_cors import CORS
 import joblib
 
 class PredictionInput(BaseModel):
@@ -7,6 +8,7 @@ class PredictionInput(BaseModel):
     PetalWidthCm: float
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 model = joblib.load("randomForestIris.pkl")
 
 @app.route('/')
