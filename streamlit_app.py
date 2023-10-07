@@ -7,7 +7,11 @@ class PredictionInput(BaseModel):
     PetalWidthCm: float
 
 # Load your trained model
-model = joblib.load("randomForestIris.pkl")
+@st.cache(allow_output_mutation=True)
+def load_model():
+    return joblib.load("randomForestIris.pkl")
+
+model = load_model()
 
 def predict(input_data):
     prediction = model.predict([[input_data.PetalLengthCm, input_data.PetalWidthCm]])
@@ -20,7 +24,7 @@ def main():
     petal_length = st.text_input("Petal Length (cm):")
     petal_width = st.text_input("Petal Width (cm):")
 
-    if st.button("Predict"):
+    if petal_length and petal_width and st.button("Predict"):
         input_data = PredictionInput(PetalLengthCm=float(petal_length), PetalWidthCm=float(petal_width))
         prediction = predict(input_data)
         st.write(f"Prediction: {prediction}")
